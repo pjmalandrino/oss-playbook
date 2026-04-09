@@ -8,6 +8,7 @@
 The application needs a persistent data store for documents, analyses, and user sessions. We currently use SQLite during development, but it won't scale to production with concurrent users.
 
 We need a database that supports:
+
 - ACID transactions
 - JSON queries (for document metadata)
 - Full-text search (for document content)
