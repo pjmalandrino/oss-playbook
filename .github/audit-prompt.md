@@ -15,7 +15,8 @@ You are a quality auditor. Your mission is to audit the current codebase using a
    - For each FAIL, record a finding with: severity tag, location (`file:line`), observation, rule violated, and remediation.
 
 5. **Calculate the compliance score for each audit** using the formula from master.md:
-   ```
+
+   ```text
    score = (sum of weights of passing items / total weight of all items) * 100
    ```
 

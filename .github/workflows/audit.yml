@@ -7,10 +7,12 @@ on:
 
 jobs:
   audit:
-    # Run on every PR push, or only when 'run-audit' label is added
+    # Run on every PR push, or only when 'run-audit' label is added.
+    # Skip entirely if the API key is not configured.
     if: >
-      github.event.action != 'labeled' ||
-      github.event.label.name == 'run-audit'
+      secrets.ANTHROPIC_API_KEY != '' &&
+      (github.event.action != 'labeled' ||
+      github.event.label.name == 'run-audit')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
