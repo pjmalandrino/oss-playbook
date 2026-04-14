@@ -1,5 +1,7 @@
 # Release Process
 
+> **When to use**: Feature freeze reached, ready to ship a new version.
+
 ## Steps
 
 ### 1. Create the release branch
@@ -51,3 +53,30 @@ Pushing the tag triggers the release workflow ([details](../ci-cd/release.md)):
 - Version auto-injected:
   - Frontend: Vite `__APP_VERSION__` (via `VITE_APP_VERSION`)
   - Backend: `APP_VERSION` environment variable
+
+## Red flags
+
+- New feature commit on the release branch — only bug fixes allowed
+- `CHANGELOG.md` still shows `[Unreleased]` at tag time — must be updated
+- `package.json` version doesn't match the tag — version mismatch in production
+- Tagging before the release gate is green — audit bypassed
+- Force-pushing to the release branch — history rewrite breaks audit trail
+
+## Anti-rationalizations
+
+| Excuse | Why it doesn't hold |
+|--------|---------------------|
+| "Let's sneak this feature into the release" | Feature freeze exists to stabilize. New features need a new cycle |
+| "The audit is mostly green, let's skip the remaining MAJs" | MAJs compound. Shipping known issues erodes quality standards |
+| "We can tag now and fix the CHANGELOG later" | The CHANGELOG is the user-facing contract. "Later" never comes |
+| "Multi-arch build is slow, let's skip ARM" | ARM users exist (local dev on Apple Silicon). Ship both or don't ship |
+
+## Verification
+
+- [ ] Release branch contains only bug fixes since branch creation
+- [ ] `CHANGELOG.md` has the correct version and date
+- [ ] `package.json` version matches `X.Y.Z`
+- [ ] Release gate verdict is **GO** or **GO CONDITIONAL** with accepted MAJs
+- [ ] Tag is on `main` (not on the release branch)
+- [ ] Docker images are published on ghcr.io (check GitHub Actions)
+- [ ] `latest-remote` and `latest-local` point to the new version

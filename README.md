@@ -150,6 +150,8 @@ You have a change to make
 
 ## Available processes
 
+> Every process follows a consistent structure: **When to use → Steps → Red flags → Anti-rationalizations → Verification**. Red flags tell you when the process is being violated. Anti-rationalizations counter the common excuses for skipping steps. Verification proves the process was followed.
+
 | # | Process | Trigger | Details |
 |---|---------|---------|---------|
 | 1 | [Commit](processes/commit-conventions.md) | Every commit | Strict Conventional Commits |
@@ -232,6 +234,19 @@ See details in:
 - [ESLint + Prettier (frontend)](quality/eslint-prettier-config.md)
 - [Testing Strategy](quality/testing-strategy.md)
 - [E2E Conventions](quality/e2e-conventions.md)
+
+---
+
+## Reference checklists
+
+Standalone, actionable checklists used during code reviews and audits:
+
+| Checklist | Used during | What it covers |
+|-----------|-------------|----------------|
+| [Architecture (Hexagonal)](references/architecture-checklist.md) | Code review, audit axis 01 | Dependency rules, layer violations, quick validation commands |
+| [Security](references/security-checklist.md) | Code review, audit axis 08 | OWASP Top 10, input validation, secrets, dependencies |
+| [Performance](references/performance-checklist.md) | Code review, audit axis 12 | Async I/O, N+1, bundle size, measurement thresholds |
+| [Testing Patterns](references/testing-patterns.md) | Code review, audit axis 09 | Naming, structure, anti-patterns, coverage expectations |
 
 ---
 

@@ -1,6 +1,6 @@
 # Quality Audit
 
-## Overview
+> **When to use**: Before every merge of a `release/*` branch into `main`. Non-negotiable.
 
 Complete audit framework with **12 axes**, each being a weighted checklist.
 The audit runs before every merge of a `release/*` branch into `main`.
@@ -158,3 +158,37 @@ Release 0.3.1:
 - 5 remediation PRs merged
 - 2 MAJOR issues remaining (scheduled for next cycle)
 - **Verdict: GO**
+
+## Red flags
+
+- Audit skipped "because we're behind schedule" — the audit IS the schedule gate
+- CRIT finding downgraded to MAJ without justification — severity must be evidence-based
+- Audit report copy-pasted from previous release — each release gets a fresh audit
+- Score artificially inflated by removing low-scoring items — the 12 axes are fixed
+- No re-audit after remediation PRs — fixes must be verified
+
+## Anti-rationalizations
+
+| Excuse | Why it doesn't hold |
+|--------|---------------------|
+| "We audited last release, nothing changed much" | Code changed. Dependencies changed. The audit catches drift |
+| "The score is 78, close enough to 80" | 78 is GO CONDITIONAL, not GO. Document the remediation plan |
+| "This CRIT is theoretical, not exploitable" | If it's truly not exploitable, document why with evidence. Otherwise it's a CRIT |
+| "Running 12 audits takes too long" | Automated checks run in < 2 min. Manual review is where quality lives |
+| "The release gate CI covers everything" | CI checks syntax and known tests. Audit checks design, architecture, and intent |
+
+## Verification
+
+- [ ] All 12 axes audited (no skipped axes)
+- [ ] Individual reports written for each axis
+- [ ] Summary report with weighted global score
+- [ ] All CRIT findings resolved (absolute NO-GO rule)
+- [ ] MAJ findings either resolved or documented with remediation plan
+- [ ] Verdict explicitly stated: GO / GO CONDITIONAL / NO-GO
+
+## See also
+
+- [Architecture checklist](../references/architecture-checklist.md) — Detailed hexagonal checks
+- [Security checklist](../references/security-checklist.md) — OWASP + dependency audit
+- [Performance checklist](../references/performance-checklist.md) — Profiling + thresholds
+- [Testing patterns](../references/testing-patterns.md) — Coverage expectations + anti-patterns
