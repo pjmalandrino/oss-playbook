@@ -131,7 +131,8 @@ docs/audit/
       02-ddd.md
       ...
       12-performance.md
-      summary.md                     # Summary + final verdict
+      summary.md                     # Dashboard + blockers + MAJ + INFO + final verdict
+      remediation-plan.md            # Sequenced fix plan with phases, PRs, validation gates
 ```
 
 ### Report contents
@@ -149,15 +150,30 @@ The **summary** consolidates:
 - Remaining MAJ issues (prioritized for next cycle)
 - The **final verdict**
 
-## Real-world example
+## Real-world examples
 
-Release 0.3.1:
+### Release 0.3.1 — GO
+
 - 12 audits executed
 - Initial scores variable (56-100 depending on axis)
 - Final score: 95/100 (weighted)
 - 5 remediation PRs merged
 - 2 MAJOR issues remaining (scheduled for next cycle)
 - **Verdict: GO**
+
+### Release 0.5.0 (pre-release) — NO-GO
+
+Audit run on the `feature/reasoning-trace` branch after the Neo4j integration and reasoning-trace features landed.
+
+- Global score: **91/100** — but **2 CRIT** and **5 MAJ**
+- Regressions introduced by the new features:
+  - `06-SOLID`: services now import `infra.neo4j` and `infra.serve_converter` concretely (port missing) — **CRIT**
+  - `07-Decoupling`: frontend features cross-import (`analysis ↔ reasoning` cycle, `chunking → analysis/store`, …) — **CRIT**
+- Strong axes: Security 100, DDD 100, KISS 100, Tests 100, Performance 95
+- **Verdict: NO-GO** — 2 CRIT + MAJ count (5) above the soft ceiling of 3
+- **Remediation plan**: sequenced in a dedicated `remediation-plan.md` with 4 phases (Ports → Services → Frontend decoupling → Cleanup) and 4 focused PRs. Estimate: 5 dev-days, 3 calendar days with 2 devs. Re-audit targets only the 7 impacted axes.
+
+This run illustrates the value of the audit: the code shipped features successfully (Security, Tests, Perf all green) while introducing architectural regressions that the 12-axis gate refuses to let through. The remediation plan is the deliverable — not the verdict.
 
 ## Red flags
 

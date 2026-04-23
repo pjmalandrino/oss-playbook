@@ -45,12 +45,13 @@ docker build --target local -t app:local .
 
 ### Ingestion (`docker-compose.ingestion.yml`)
 
-Additional overlay to enable vector search:
+Additional overlay to enable vector search and graph storage:
 
 | Service | Role | Port |
 |---------|------|------|
 | `opensearch` | Vector search engine | 9200 |
-| `embedding` | Sentence-transformers service | 8001 |
+| `embedding` | Sentence-transformers microservice (`embedding-service/`) | 8001 |
+| `neo4j` | Graph database (DoclingDocument tree + chunks) | 7474 (browser) / 7687 (bolt) |
 
 **Launch with ingestion:**
 ```bash
@@ -59,6 +60,8 @@ docker compose --profile ingestion \
   -f docker-compose.ingestion.yml \
   up --build
 ```
+
+When the ingestion stack is up, the app mirrors every parsed `DoclingDocument` into Neo4j (`TreeWriter`) and every chunk (`ChunkWriter` with `DERIVED_FROM` edges). The in-app graph view (Cytoscape.js, see [ADR-001](https://github.com/scub-france/Docling-Studio/blob/main/docs/architecture/adrs/ADR-001-graph-visualization-library.md)) reads `GET /api/documents/{id}/graph` — capped at 200 pages (`413` beyond).
 
 ## Environment variables
 
@@ -74,7 +77,15 @@ docker compose --profile ingestion \
 | `CORS_ORIGINS` | — | Allowed origins |
 | `UPLOAD_DIR` | `./uploads` | Uploads directory |
 | `DB_PATH` | `./data/app.db` | SQLite database path |
-| `OPENSEARCH_URL` | — | OpenSearch URL (optional) |
-| `EMBEDDING_URL` | — | Embedding service URL (optional) |
+| `OPENSEARCH_URL` | — | OpenSearch URL (empty = ingestion disabled) |
+| `EMBEDDING_URL` | — | Embedding service URL (empty = ingestion disabled) |
 | `EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | Embedding model |
-| `EMBEDDING_DIMENSION` | `384` | Vector dimension |
+| `EMBEDDING_DIMENSION` | `384` | Vector dimension (must match embedding model) |
+| `OPENSEARCH_DEFAULT_LIMIT` | `1000` | Max chunks returned per document query |
+| `NEO4J_URI` | — | Neo4j Bolt endpoint (empty = graph storage disabled) |
+| `NEO4J_USER` | `neo4j` | Neo4j username |
+| `NEO4J_PASSWORD` | `changeme` | Neo4j password (**change in production**) |
+| `MAX_GRAPH_PAGES` | `200` | Cap for `/graph` and `/reasoning-graph` (returns 413 beyond) |
+| `RAG_ENABLED` | `false` | Enable the `/rag` live reasoning endpoint (requires `docling-agent` + Ollama) |
+| `OLLAMA_HOST` | `http://localhost:11434` | Ollama endpoint (used when `RAG_ENABLED=true`) |
+| `RAG_MODEL_ID` | `gpt-oss:20b` | Default Ollama model for RAG |

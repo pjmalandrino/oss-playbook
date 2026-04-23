@@ -7,11 +7,13 @@
 ```markdown
 # ADR-XXX: Decision title
 
-## Status
-Proposed | Accepted | Deprecated | Superseded by ADR-YYY
+**Date**: YYYY-MM-DD
+**Status**: Proposed | Accepted | Deprecated | Superseded by ADR-YYY
+**Deciders**: Name(s)
 
 ## Context
-What problem or need triggered this decision?
+What problem or need triggered this decision? Include links to the related
+design doc or issue, and list explicit constraints and non-goals.
 
 ## Decision
 What solution was chosen?
@@ -23,26 +25,44 @@ What solution was chosen?
 ### Negative
 - ...
 
-### Risks
+### Neutral
 - ...
 
-## Alternatives considered
-1. **Option A** — Description, why discarded
-2. **Option B** — Description, why discarded
+## Alternatives Considered
+
+### Alternative 1: Name
+- **Pros**: ...
+- **Cons**: ...
+- **Why rejected**: ...
+
+### Alternative 2: Name
+- **Pros**: ...
+- **Cons**: ...
+- **Why rejected**: ...
+
+## References
+- Related design doc
+- Related issue / PR
+- External docs for the chosen option
 ```
 
 ## Naming convention
 
-- File: `docs/architecture/adr-XXX-short-title.md`
-- Sequential numbering
+- File: `docs/architecture/adrs/ADR-XXX-short-title.md` (uppercase `ADR-` prefix, under `adrs/`)
+- Sequential numbering (`ADR-001`, `ADR-002`, …)
 - Short title in kebab-case
 
-## Examples of documented decisions
+## Example in this repo
+
+- [ADR-001: Graph visualization library for the Neo4j graph view](https://github.com/scub-france/Docling-Studio/blob/main/docs/architecture/adrs/ADR-001-graph-visualization-library.md) — chose Cytoscape.js after comparing vis-network, Neovis.js, D3, sigma.js/reagraph, and Mermaid.
+
+## Other decisions that should become ADRs (retroactive)
 
 - Choice of hexagonal architecture (ports & adapters)
 - Choice of aiosqlite vs PostgreSQL
 - Choice of Karate for E2E testing
 - Dual Docker target (remote/local)
+- Choice of Neo4j for graph storage (design doc: `docs/design/neo4j-integration.md`)
 
 ## Red flags
 
@@ -68,4 +88,4 @@ What solution was chosen?
 - [ ] At least 2 alternatives considered with reasons for rejection
 - [ ] Consequences include both positives AND negatives
 - [ ] Status is current (not stuck at "Proposed")
-- [ ] File follows naming convention (`adr-XXX-short-title.md`)
+- [ ] File follows naming convention (`docs/architecture/adrs/ADR-XXX-short-title.md`)

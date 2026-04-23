@@ -70,6 +70,25 @@ find . -name "*.py" -exec wc -l {} + | sort -rn | head -20
 
 # Check no business logic in API layer
 grep -r "if.*and\|for.*in\|while" api/ --include="*.py" | grep -v "schema\|import\|#"
+
+# Check services do not import concrete adapters (ports only)
+grep -rn "from infra\." services/ --include="*.py"
+# Expected: zero matches — services depend on domain/ports, not infra/
+```
+
+## Automated architecture tests (`pytestarch`)
+
+The backend enforces hexagonal rules as actual tests (`tests/test_architecture.py`) using [`pytestarch`](https://github.com/zyskarch/pytestarch). These fail CI if a rule is broken, so drift is caught at PR time rather than audit time. Typical rules:
+
+- `domain/` must not import from `api/`, `persistence/`, `infra/`, `services/`, or any third-party framework (FastAPI, aiosqlite, httpx).
+- `services/` must not import from `api/` or `infra/` concrete modules (only through ports).
+- `api/` must not import directly from `persistence/`.
+
+Running locally:
+
+```bash
+cd document-parser
+pytest tests/test_architecture.py -v
 ```
 
 ## Common violations and fixes
