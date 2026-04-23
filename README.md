@@ -29,6 +29,9 @@ This repo contains **practices and processes only**. The following files live in
 - Deploy a release → [Release](processes/release.md)
 - Critical bug in production → [Incident](processes/incident-response.md) then [Hotfix](processes/hotfix.md) or [Rollback](processes/rollback.md)
 - Architecture decision → [ADR](processes/adr.md)
+- Open a new ticket → [Issue Creation](processes/issue-creation.md) (`/create-issue`)
+- Kick off a technical design on an issue → [Conception](processes/conception.md) (`/conception`)
+- Start implementing an issue → [Resolve](processes/resolve.md) (`/resolve`)
 - Understand the CI → [CI Pipeline](ci-cd/ci.md)
 
 ---
@@ -166,6 +169,9 @@ You have a change to make
 | 10 | [Security Response](processes/security-response.md) | Vulnerability detected | Assessment, patch, disclosure |
 | 11 | [Onboarding](processes/onboarding.md) | New contributor | Getting started guide |
 | 12 | [Issue Triage](processes/issue-triage.md) | New issue | Classification and prioritization |
+| 13 | [Issue Creation](processes/issue-creation.md) | Opening a new ticket | `/create-issue` slash command — enforces required type + milestone |
+| 14 | [Conception](processes/conception.md) | Before implementing a non-trivial issue | `/conception` slash command — scaffolds `docs/design/<n>-<slug>.md` from the template |
+| 15 | [Resolve](processes/resolve.md) | Start implementing an issue | `/resolve` slash command — validates metadata + design, creates `<prefix>/<n>-<slug>` branch off `main` |
 
 ---
 
