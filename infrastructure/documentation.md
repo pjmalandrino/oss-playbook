@@ -12,8 +12,10 @@ docs/
   index.md                  # Home page
   getting-started.md        # Getting started guide
   architecture.md           # Architecture overview
-  PROCESSES.md              # Process index (19 processes)
-  CONTRIBUTING.md           # Contribution guide
+  bbox-pipeline.md          # Bounding-box rendering pipeline notes
+  claude-code-commands.md   # Reference of available /audit, /git, /ops, /release slash commands
+  PROCESSES.md              # Process index
+  contributing.md           # Contribution guide
   git-workflow/
     commit-conventions.md
     code-review-checklist.md
@@ -22,6 +24,11 @@ docs/
     coding-standards.md
     adr-guide.md
     adr-template.md
+    adrs/
+      ADR-001-graph-visualization-library.md
+  design/                   # Design docs (pre-ADR, or lightweight feature specs)
+    neo4j-integration.md
+    reasoning-trace.md
   release/
     deployment-checklist.md
     rollback-playbook.md
@@ -30,11 +37,14 @@ docs/
     security-response.md
     monitoring-checklist.md
   community/
-    onboarding.md
-    issue-triage.md
+    onboarding-guide.md
+    issue-triage-process.md
     roadmap-template.md
   audit/
-    # 12+ quality audit axes
+    master.md               # Central orchestration
+    audits/                 # 12 axis checklists (templates)
+    reports/
+      release-X.Y.Z/        # One folder per release, 12 reports + summary + remediation-plan
 ```
 
 ## Navigation (mkdocs.yml)

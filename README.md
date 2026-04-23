@@ -42,8 +42,12 @@ This playbook covers a full-stack project composed of:
 
 | Layer | Stack | Quality tools |
 |-------|-------|---------------|
-| **Backend** | FastAPI + Python 3.12 + aiosqlite | Ruff (lint + format), pytest |
-| **Frontend** | Vue 3 + TypeScript (strict) + Vite + Pinia | ESLint 9 (flat config) + Prettier, Vitest |
+| **Backend** | FastAPI + Python 3.12 + aiosqlite | Ruff (lint + format), pytest, pytestarch (hexagonal rules) |
+| **Frontend** | Vue 3 + TypeScript (strict) + Vite + Pinia + Cytoscape.js | ESLint 9 (flat config) + Prettier, Vitest |
+| **Embedding service** | FastAPI + sentence-transformers (Python, opt-in) | Ruff, pytest |
+| **Ingestion / Search** | OpenSearch (vector + full-text, opt-in) | Docker Compose overlay |
+| **Graph storage** | Neo4j (DoclingDocument tree + chunks, opt-in) | Bolt driver, Cypher |
+| **Live reasoning** | `docling-agent` + Ollama (opt-in, `RAG_ENABLED=true`) | Chunkless RAG loop |
 | **E2E** | Karate (API) + Karate UI (browser) | Maven, Chrome headless |
 | **Infra** | Docker multi-target, Nginx, docker-compose | GitHub Actions CI/CD |
 | **Docs** | MkDocs Material | GitHub Pages |
@@ -184,6 +188,9 @@ You have a change to make
           │        domain/              │  <- The core (hexagon)
           │  Pure business logic        │     No external dependencies
           │  Models, value objects      │     Ports = interfaces
+          │  Ports: DocumentConverter,  │
+          │  VectorStore, EmbeddingSvc, │
+          │  GraphWriter, …             │
           └──────────┬──────────────────┘
                      │
        ┌─────────────┼─────────────────────┐
@@ -195,11 +202,16 @@ You have a change to make
    (camelCase)
                                     infra/
                                     Adapters OUT
-                                    Converters, embeddings,
+                                    Local/Serve converters,
+                                    Neo4j writers,
+                                    OpenSearch store,
+                                    Embedding HTTP client,
                                     rate limiter, settings
 ```
 
 **Principle**: the domain depends on nothing. Adapters (API, persistence, infra) implement ports defined by the domain. Any adapter can be swapped without touching the core.
+
+**Enforcement**: hexagonal rules are encoded as [`pytestarch`](https://github.com/zyskarch/pytestarch) tests in `document-parser/tests/test_architecture.py` — CI fails if any import crosses a forbidden boundary (domain → framework, services → infra concrete, etc.).
 
 ### Frontend architecture (Feature-based)
 
@@ -227,8 +239,10 @@ src/
 | Stack | File | Services |
 |-------|------|----------|
 | Production | `docker-compose.yml` | app + nginx |
-| Development | `docker-compose.dev.yml` | + hot-reload (uvicorn --reload, vite HMR) |
-| Ingestion | `docker-compose.ingestion.yml` | + OpenSearch + embedding service |
+| Development | `docker-compose.dev.yml` | + hot-reload (uvicorn --reload, vite HMR), OpenSearch Dashboards |
+| Ingestion (opt-in) | `docker-compose.ingestion.yml` | + OpenSearch + embedding service + **Neo4j** |
+
+See [infrastructure/docker.md](infrastructure/docker.md) for the full env-var table (Neo4j, RAG, rate limiting, upload caps).
 
 ---
 
